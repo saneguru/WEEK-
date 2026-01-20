@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Responsive Registration Form</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+    }
+
+    .container {
+      width: 100%;
+      max-width: 400px;
+      background: #fff;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    form h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+      position: relative;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      transition: border-color 0.3s;
+    }
+
+    input:focus {
+      border-color: #2575fc;
+      outline: none;
+    }
+
+    small.error {
+      color: red;
+      font-size: 12px;
+      position: absolute;
+      bottom: -16px;
+      left: 0;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #2575fc;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #6a11cb;
+    }
+
+    #message {
+      margin-top: 15px;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 500px) {
+      .container {
+        padding: 15px;
+      }
+
+      button {
+        font-size: 14px;
+        padding: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <form id="registrationForm" novalidate>
+      <h2>Register</h2>
+      
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" required>
+        <small class="error"></small>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" required>
+        <small class="error"></small>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" required>
+        <small class="error"></small>
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <input type="password" id="confirmPassword" required>
+        <small class="error"></small>
+      </div>
+
+      <button type="submit">Register</button>
+      <p id="message"></p>
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById("registrationForm");
+    const inputs = form.querySelectorAll("input");
+    const message = document.getElementById("message");
+
+    function showError(input, msg) {
+      const error = input.parentElement.querySelector(".error");
+      error.textContent = msg;
+    }
+
+    function clearError(input) {
+      const error = input.parentElement.querySelector(".error");
+      error.textContent = "";
+    }
+
+    inputs.forEach(input => {
+      input.addEventListener("input", () => {
+        if (input.id === "username" && input.value.trim().length < 3) {
+          showError(input, "Username must be at least 3 characters");
+        } else if (input.id === "email" && !/\S+@\S+\.\S+/.test(input.value)) {
+          showError(input, "Enter a valid email");
+        } else if (input.id === "password" && input.value.length < 6) {
+          showError(input, "Password must be at least 6 characters");
+        } else if (input.id === "confirmPassword" && input.value !== document.getElementById("password").value) {
+          showError(input, "Passwords do not match");
+        } else {
+          clearError(input);
+        }
+      });
+    });
+
+    form.addEventListener("submit", e => {
+      e.preventDefault();
+      let valid = true;
+
+      inputs.forEach(input => {
+        if (input.value.trim() === "") {
+          showError(input, "This field is required");
+          valid = false;
+        }
+      });
+
+      if (valid) {
+        message.style.color = "green";
+        message.textContent = "Registration successful!";
+        form.reset();
+        inputs.forEach(clearError);
+      } else {
+        message.style.color = "red";
+        message.textContent = "Please fix the errors above.";
+      }
+    });
+  </script>
+</body>
+</html>
